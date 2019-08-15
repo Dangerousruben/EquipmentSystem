@@ -120,31 +120,29 @@ void Player::Shoot(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 
 void Player::Throw(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
-	auto tempptr = dynamic_cast<InteractibleItemSlot*>(ItemSlotMap.at(a_ItemSlot).get());
-	if (!tempptr)
+	if (CanInteract(a_ItemSlot))
 	{
-		throw CannotInteractWithSlot();
-	}
-
-	tempptr->item->Throw(a_Result);
-	if (a_Result.Success)
-	{
-		a_Result.Unequip = UnEquipItem(a_ItemSlot);
+		std::weak_ptr<Item> tempItemPtr = ItemSlotMap.at(a_ItemSlot).get()->item;
+		if (!tempItemPtr.expired())
+		{
+			tempItemPtr.lock()->Throw(a_Result);
+			if (a_Result.Success)
+			{
+				a_Result.Unequip = UnEquipItem(a_ItemSlot);
+			}
+		}
 	}
 }
 
 void Player::TurnOnOff(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
-	auto tempptr = dynamic_cast<InteractibleItemSlot*>(ItemSlotMap.at(a_ItemSlot).get());
-	if (!tempptr)
+	if (CanInteract(a_ItemSlot))
 	{
-		throw CannotInteractWithSlot();
-	}
-
-	auto tempButtonPtr = std::dynamic_pointer_cast<IButtonInterface>(tempptr->item);
-	if (tempButtonPtr)
-	{
-		tempButtonPtr->PressButton(a_Result);
+		std::weak_ptr<IButtonInterface> tempButtonPtr = std::dynamic_pointer_cast<IButtonInterface>(ItemSlotMap.at(a_ItemSlot).get()->item);
+		if (!tempButtonPtr.expired())
+		{
+			tempButtonPtr.lock()->PressButton(a_Result);
+		}
 	}
 }
 
@@ -170,6 +168,16 @@ void Player::Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 	{
 		TurnOnOff(a_ItemSlot, a_Result);
 	}
+}
+
+bool Player::CanInteract(const PlayerItemSlots a_ItemSlot)
+{
+	std::weak_ptr<InteractibleItemSlot> tempptr = std::dynamic_pointer_cast<InteractibleItemSlot>(ItemSlotMap.at(a_ItemSlot));
+	if (tempptr.expired())
+	{
+		throw CannotInteractWithSlot();
+	}
+	return true;
 }
 
 void Player::ResolveInteract(InteractResult& a_Result, const PlayerItemSlots a_ItemSlot)

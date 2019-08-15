@@ -46,5 +46,7 @@ public:
 private:
 	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> ItemSlotMap;
 
+	bool CanInteract(const PlayerItemSlots a_ItemSlot);
+
 	void ResolveInteract(InteractResult& a_Result, const PlayerItemSlots a_ItemSlot);
 };
