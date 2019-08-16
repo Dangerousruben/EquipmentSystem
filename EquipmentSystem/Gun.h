@@ -2,6 +2,8 @@
 #include "Item.h"
 #include "GunInterface.h"
 
+
+
 class AmmoClip;
 
 class Gun : public ItemConsumer, public IGunInterface
@@ -14,7 +16,7 @@ public:
 
 	virtual std::string GetName() override { return "Gun"; };
 
-//	virtual void ModeSwitch() override;
+	void ToggleMode(InteractResult& a_Result) override;
 	
 	virtual void Reload(std::shared_ptr<AmmoClip> a_AmmoClip);
 
@@ -28,6 +30,22 @@ public:
 
 
 protected:
+	//TODO Make struct rather than class
 	std::shared_ptr<AmmoClip> m_AmmoClip;
+
+	GunMode m_GunMode = GunMode::Single;
+
+	int NumOfBurstShot = 3;
+
+	void SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode) override;
+
+private:
+	virtual void SingleShot(InteractResult& a_Result);
+
+	virtual void AutomaticShot(InteractResult& a_Result);
+
+	virtual void BurstShot(InteractResult& a_Result);
+
+	virtual void FireShot();
 };
 

@@ -170,6 +170,18 @@ void Player::Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 	}
 }
 
+void Player::ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
+{
+	if (CanInteract(a_ItemSlot))
+	{
+		std::weak_ptr<IGunInterface> tempGunPtr = std::dynamic_pointer_cast<IGunInterface>(ItemSlotMap.at(a_ItemSlot).get()->item);
+		if (!tempGunPtr.expired())
+		{
+			tempGunPtr.lock()->ToggleMode(a_Result);
+		}
+	}
+}
+
 bool Player::CanInteract(const PlayerItemSlots a_ItemSlot)
 {
 	std::weak_ptr<InteractibleItemSlot> tempptr = std::dynamic_pointer_cast<InteractibleItemSlot>(ItemSlotMap.at(a_ItemSlot));

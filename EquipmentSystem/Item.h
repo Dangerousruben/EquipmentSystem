@@ -24,6 +24,8 @@ struct InteractResult
 	bool Consume = false;
 
 	int ThrowSpeed = 0;
+
+	int NumOfShotsFired = 0;
 };
 
 

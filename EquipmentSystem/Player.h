@@ -43,6 +43,8 @@ public:
 
 	void Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
+	void ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+
 private:
 	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> ItemSlotMap;
 

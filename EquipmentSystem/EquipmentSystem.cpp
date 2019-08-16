@@ -177,6 +177,20 @@ bool parser(std::string wd1, std::string wd2, std::string wd3, std::shared_ptr<P
 		std::cout << result.Message;
 		return result.Success;
 	}
+	else if (wd2 == "TOGGLEGUNMODE")
+	{
+		InteractResult result;
+		a_Player->ToggleGunMode(selectedSlot, result);
+		std::cout << result.Message;
+		return result.Success;
+	}
+	else if (wd2 == "USE")
+	{
+		InteractResult result;
+		a_Player->Use(selectedSlot, result);
+		std::cout << result.Message;
+		return result.Success;
+	}
 	else if (wd2 == "GET")
 	{
 		if (wd3 == "NAME")
