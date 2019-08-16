@@ -20,7 +20,7 @@ public:
 	std::string GetItemName();
 
 protected:
-	std::shared_ptr<Item> item;
+	std::shared_ptr<Item> m_Item;
 
 private:
 
@@ -32,6 +32,4 @@ class InteractibleItemSlot : public ItemSlot
 public:
 	InteractibleItemSlot(ItemEquipType a_ItemSlotType);
 	virtual ~InteractibleItemSlot();
-
-	void Interact(InteractResult& a_Result);
 };

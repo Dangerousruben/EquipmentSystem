@@ -7,8 +7,6 @@ public:
 	Hat();
 	virtual ~Hat();
 
-	void Interact(InteractResult& a_Result) override {};
-
 private:
 
 };

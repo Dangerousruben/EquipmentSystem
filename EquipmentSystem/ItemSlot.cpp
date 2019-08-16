@@ -17,7 +17,7 @@ bool ItemSlot::EquipItem(const std::shared_ptr<Item> a_NewItem)
 {
 	if (CanEquip(a_NewItem))
 	{
-		item = a_NewItem;
+		m_Item = a_NewItem;
 		return true;
 	}
 	return false;
@@ -25,11 +25,11 @@ bool ItemSlot::EquipItem(const std::shared_ptr<Item> a_NewItem)
 
 bool ItemSlot::UnEquipItem()
 {
-	if (!item)
+	if (!m_Item)
 	{
 		throw ItemSlotEmpty();
 	}
-	item.reset();
+	m_Item.reset();
 	return true;
 }
 
@@ -51,7 +51,7 @@ bool ItemSlot::CanEquip(std::shared_ptr<Item> a_NewItem)
 
 bool ItemSlot::HasItemEquipped()
 {
-	if (item)
+	if (m_Item)
 	{
 		return true;
 	}
@@ -63,11 +63,11 @@ bool ItemSlot::HasItemEquipped()
 
 std::string ItemSlot::GetItemName()
 {
-	if (!item)
+	if (!m_Item)
 	{
 		throw ItemSlotEmpty();
 	}
-	return item->GetName();
+	return m_Item->GetName();
 }
 
 InteractibleItemSlot::InteractibleItemSlot(ItemEquipType a_ItemSlotType)
@@ -79,14 +79,3 @@ InteractibleItemSlot::~InteractibleItemSlot()
 {
 }
 
-void InteractibleItemSlot::Interact(InteractResult& a_Result)
-{
-	if (item)
-	{
-		return item->Interact(a_Result);
-	}
-	else
-	{
-		throw ItemSlotEmpty();
-	}
-}

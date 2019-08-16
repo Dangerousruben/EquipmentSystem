@@ -26,8 +26,6 @@ public:
 
 	std::string GetItemNameOnSlot(const PlayerItemSlots a_ItemSlot);
 
-	void Interact(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
-
 	void Reload(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
 	int GetAmmo(const PlayerItemSlots a_ItemSlot);
@@ -45,9 +43,7 @@ public:
 	void SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots a_ItemSlot2);
 
 private:
-	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> ItemSlotMap;
+	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> m_ItemSlotMap;
 
 	bool CanInteract(const PlayerItemSlots a_ItemSlot);
-
-	void ResolveInteract(InteractResult& a_Result, const PlayerItemSlots a_ItemSlot);
 };

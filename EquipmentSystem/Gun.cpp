@@ -13,21 +13,6 @@ Gun::~Gun()
 {
 }
 
-void Gun::Interact(InteractResult& a_Result)
-{
-	if (m_AmmoClip->m_Ammo.CurrentAmmo > 0)
-	{
-		m_AmmoClip->m_Ammo.CurrentAmmo--;
-		a_Result.Success = true;
-		a_Result.Unequip = false;
-		a_Result.Message = "Pew, pew, pew\n";
-	}
-	else
-	{
-		throw OutOfAmmo();
-	}
-}
-
 void Gun::SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode)
 {
 	m_GunMode = a_NewGunMode;
@@ -59,21 +44,6 @@ void Gun::Reload(std::shared_ptr<AmmoClip> a_AmmoClip)
 	{
 		m_AmmoClip.swap(a_AmmoClip);
 	}
-}
-
-bool Gun::CanConsume(std::weak_ptr<Item> a_Item)
-{
-	return false;
-}
-
-bool Gun::ConsumeItem(Item* a_Item)
-{
-	//auto tempptr = dynamic_cast<AmmoClip*>(a_Item);
-	//if (tempptr)
-	{
-		//Reload(tempptr);
-	}
-	return false;
 }
 
 int Gun::GetAmmo()

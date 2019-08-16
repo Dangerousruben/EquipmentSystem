@@ -7,8 +7,6 @@ public:
 	Rock();
 	virtual ~Rock();
 
-	void Interact(InteractResult& a_Result) override;
-
 private:
 
 };

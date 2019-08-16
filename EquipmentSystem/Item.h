@@ -35,8 +35,6 @@ public:
 	Item();
 	virtual ~Item();
 
-	virtual void Interact(InteractResult& a_Result) = 0;
-
 	virtual std::string GetName() { return Name; };
 
 	std::vector<ItemEquipType> CompatibleEquipTypes;
@@ -47,32 +45,4 @@ protected:
 	std::string Name = "Item";
 
 	int ThrowSpeed = 10;
-};
-
-class ConsumableItem : public Item
-{
-public:
-	ConsumableItem();
-	virtual ~ConsumableItem();
-
-	virtual bool CanBeConsumedBy(std::weak_ptr<Item> a_Item) = 0;
-
-	virtual bool ConsumeItem(std::weak_ptr<Item> a_Item) = 0;
-
-private:
-
-};
-
-class ItemConsumer : public Item
-{
-public:
-	ItemConsumer();
-	virtual ~ItemConsumer();
-
-	virtual bool CanConsume(std::weak_ptr<Item> a_Item) = 0;
-
-	virtual bool ConsumeItem(Item* a_Item) = 0;
-
-private:
-
 };

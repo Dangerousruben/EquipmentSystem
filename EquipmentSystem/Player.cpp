@@ -9,9 +9,9 @@
 
 Player::Player()
 {	
-	ItemSlotMap.insert(std::make_pair(HeadSlot, std::shared_ptr<ItemSlot>(std::make_shared<ItemSlot>(Head))));
-	ItemSlotMap.insert(std::make_pair(PlayerItemSlots::LeftArmSlot, std::shared_ptr<ItemSlot>(std::make_shared<InteractibleItemSlot>(Arm))));
-	ItemSlotMap.insert(std::make_pair(PlayerItemSlots::RightArmSlot, std::shared_ptr<ItemSlot>(std::make_shared<InteractibleItemSlot>(Arm))));
+	m_ItemSlotMap.insert(std::make_pair(HeadSlot, std::shared_ptr<ItemSlot>(std::make_shared<ItemSlot>(Head))));
+	m_ItemSlotMap.insert(std::make_pair(PlayerItemSlots::LeftArmSlot, std::shared_ptr<ItemSlot>(std::make_shared<InteractibleItemSlot>(Arm))));
+	m_ItemSlotMap.insert(std::make_pair(PlayerItemSlots::RightArmSlot, std::shared_ptr<ItemSlot>(std::make_shared<InteractibleItemSlot>(Arm))));
 }
 
 Player::~Player()
@@ -26,78 +26,60 @@ bool Player::EquipItem(const std::shared_ptr<Item> a_Item, const PlayerItemSlots
 	{
 		throw EquipItemEmpty();
 	}
-	if (ItemSlotMap.at(a_ItemSlot)->HasItemEquipped())
+	if (m_ItemSlotMap.at(a_ItemSlot)->HasItemEquipped())
 	{
-		ItemSlotMap.at(a_ItemSlot)->UnEquipItem();
+		m_ItemSlotMap.at(a_ItemSlot)->UnEquipItem();
 	}
 
-	return ItemSlotMap.at(a_ItemSlot)->EquipItem(a_Item);
+	return m_ItemSlotMap.at(a_ItemSlot)->EquipItem(a_Item);
 }
 
 bool Player::UnEquipItem(const PlayerItemSlots a_ItemSlot)
 {
-	return ItemSlotMap.at(a_ItemSlot)->UnEquipItem();
+	return m_ItemSlotMap.at(a_ItemSlot)->UnEquipItem();
 }
 
 std::string Player::GetItemNameOnSlot(PlayerItemSlots a_ItemSlot)
 {
-	return ItemSlotMap.at(a_ItemSlot)->GetItemName();
-}
-
-void Player::Interact(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
-{
-	auto tempptr = dynamic_cast<InteractibleItemSlot*>(ItemSlotMap.at(a_ItemSlot).get());
-	if (!tempptr)
-	{
-		throw CannotInteractWithSlot();
-	}
-	else
-	{
-		tempptr->Interact(a_Result);
-		ResolveInteract(a_Result, a_ItemSlot);
-	}
+	return m_ItemSlotMap.at(a_ItemSlot)->GetItemName();
 }
 
 void Player::Reload(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
-	auto tempptr = dynamic_cast<InteractibleItemSlot*>(ItemSlotMap.at(a_ItemSlot).get());
-	if (!tempptr)
+	if (CanInteract(a_ItemSlot))
 	{
-		throw CannotInteractWithSlot();
-	}
-	auto tempGunptr = std::dynamic_pointer_cast<Gun>((tempptr->item));
-	if (!tempGunptr)
-	{
-		throw NoGunEquipped();
-	}
-
-	PlayerItemSlots otherArm;
-	switch (a_ItemSlot)
-	{
-	case LeftArmSlot:
-		otherArm = RightArmSlot;
-	case RightArmSlot:
-		otherArm = LeftArmSlot;
-	default:
-		break;
-	}
+		PlayerItemSlots otherArm = (a_ItemSlot == RightArmSlot) ? LeftArmSlot : RightArmSlot;
+		auto tempGunptr = std::dynamic_pointer_cast<Gun>((m_ItemSlotMap.at(a_ItemSlot)->m_Item));
+		if (!tempGunptr)
+		{
+			tempGunptr = std::dynamic_pointer_cast<Gun>((m_ItemSlotMap.at(otherArm)->m_Item));
+			if (!tempGunptr)
+			{
+				throw NoGunEquipped();
+			}
+		}
 
 
-	auto tempAmmoClipptr = std::dynamic_pointer_cast<AmmoClip>(ItemSlotMap.at(otherArm).get()->item);
-	if (!tempAmmoClipptr)
-	{
-		throw NoAmmoClipEquipped();
-	}
+		auto tempAmmoClipptr = std::dynamic_pointer_cast<AmmoClip>(m_ItemSlotMap.at(otherArm)->m_Item);
+		if (!tempAmmoClipptr)
+		{
+			tempAmmoClipptr = std::dynamic_pointer_cast<AmmoClip>((m_ItemSlotMap.at(a_ItemSlot)->m_Item));
+			if (!tempAmmoClipptr)
+			{
+				throw NoAmmoClipEquipped();
+			}
+		}
 
-	tempGunptr->Reload(tempAmmoClipptr);
-	UnEquipItem(otherArm);
-	a_Result.Message = "I reloaded my gun\n";
-	a_Result.Success = true;
+		tempGunptr->Reload(tempAmmoClipptr);
+		UnEquipItem(otherArm);
+		a_Result.Message = "I reloaded my gun\n";
+		a_Result.Success = true;
+	}
 }
 
 int Player::GetAmmo(const PlayerItemSlots a_ItemSlot)
 {
-	std::weak_ptr<Gun> tempptr = std::dynamic_pointer_cast<Gun>(ItemSlotMap.at(a_ItemSlot).get()->item);
+	std::weak_ptr<Gun> tempptr = std::dynamic_pointer_cast<Gun>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
 	if (!tempptr.expired())
 	{
 		return tempptr.lock()->GetAmmo();
@@ -110,12 +92,12 @@ int Player::GetAmmo(const PlayerItemSlots a_ItemSlot)
 
 void Player::Shoot(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
-	auto tempptr = dynamic_cast<InteractibleItemSlot*>(ItemSlotMap.at(a_ItemSlot).get());
+	auto tempptr = dynamic_cast<InteractibleItemSlot*>(m_ItemSlotMap.at(a_ItemSlot).get());
 	if (!tempptr)
 	{
 		throw CannotInteractWithSlot();
 	}
-	auto tempShootPtr = std::dynamic_pointer_cast<IGunInterface>(tempptr->item);
+	auto tempShootPtr = std::dynamic_pointer_cast<IGunInterface>(tempptr->m_Item);
 	if (tempShootPtr)
 	{
 		tempShootPtr->Shoot(a_Result);
@@ -126,7 +108,7 @@ void Player::Throw(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
 	if (CanInteract(a_ItemSlot))
 	{
-		std::weak_ptr<Item> tempItemPtr = ItemSlotMap.at(a_ItemSlot).get()->item;
+		std::weak_ptr<Item> tempItemPtr = m_ItemSlotMap.at(a_ItemSlot).get()->m_Item;
 		if (!tempItemPtr.expired())
 		{
 			tempItemPtr.lock()->Throw(a_Result);
@@ -142,7 +124,7 @@ void Player::TurnOnOff(const PlayerItemSlots a_ItemSlot, InteractResult& a_Resul
 {
 	if (CanInteract(a_ItemSlot))
 	{
-		std::weak_ptr<IButtonInterface> tempButtonPtr = std::dynamic_pointer_cast<IButtonInterface>(ItemSlotMap.at(a_ItemSlot).get()->item);
+		std::weak_ptr<IButtonInterface> tempButtonPtr = std::dynamic_pointer_cast<IButtonInterface>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
 		if (!tempButtonPtr.expired())
 		{
 			tempButtonPtr.lock()->PressButton(a_Result);
@@ -152,23 +134,23 @@ void Player::TurnOnOff(const PlayerItemSlots a_ItemSlot, InteractResult& a_Resul
 
 void Player::Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 {
-	auto tempShootPtr = std::dynamic_pointer_cast<IGunInterface>(ItemSlotMap.at(a_ItemSlot).get()->item);
+	auto tempShootPtr = std::dynamic_pointer_cast<IGunInterface>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
 	if (tempShootPtr)
 	{
 		Shoot(a_ItemSlot, a_Result);
 	}
-	auto tempAmmoPtr = std::dynamic_pointer_cast<AmmoClip>(ItemSlotMap.at(a_ItemSlot).get()->item);
+	auto tempAmmoPtr = std::dynamic_pointer_cast<AmmoClip>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
 	if (tempAmmoPtr)
 	{
 		Reload(a_ItemSlot, a_Result);
 	}
-	auto rockPtr = std::dynamic_pointer_cast<Rock>(ItemSlotMap.at(a_ItemSlot).get()->item);
-	if (rockPtr)
+	auto tempRockPtr = std::dynamic_pointer_cast<Rock>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
+	if (tempRockPtr)
 	{
 		Throw(a_ItemSlot, a_Result);
 	}
-	auto flashLightPtr = std::dynamic_pointer_cast<FlashLight>(ItemSlotMap.at(a_ItemSlot).get()->item);
-	if (flashLightPtr)
+	auto tempFlashLightPtr = std::dynamic_pointer_cast<FlashLight>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
+	if (tempFlashLightPtr)
 	{
 		TurnOnOff(a_ItemSlot, a_Result);
 	}
@@ -178,7 +160,7 @@ void Player::ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_R
 {
 	if (CanInteract(a_ItemSlot))
 	{
-		std::weak_ptr<IGunInterface> tempGunPtr = std::dynamic_pointer_cast<IGunInterface>(ItemSlotMap.at(a_ItemSlot).get()->item);
+		std::weak_ptr<IGunInterface> tempGunPtr = std::dynamic_pointer_cast<IGunInterface>(m_ItemSlotMap.at(a_ItemSlot).get()->m_Item);
 		if (!tempGunPtr.expired())
 		{
 			tempGunPtr.lock()->ToggleMode(a_Result);
@@ -188,8 +170,8 @@ void Player::ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_R
 
 void Player::SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots a_ItemSlot2)
 {
-	auto tempItem1 = ItemSlotMap.at(a_ItemSlot1)->item;
-	auto tempItem2 = ItemSlotMap.at(a_ItemSlot2)->item;
+	auto tempItem1 = m_ItemSlotMap.at(a_ItemSlot1)->m_Item;
+	auto tempItem2 = m_ItemSlotMap.at(a_ItemSlot2)->m_Item;
 	try
 	{
 		try
@@ -217,47 +199,10 @@ void Player::SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots 
 
 bool Player::CanInteract(const PlayerItemSlots a_ItemSlot)
 {
-	std::weak_ptr<InteractibleItemSlot> tempptr = std::dynamic_pointer_cast<InteractibleItemSlot>(ItemSlotMap.at(a_ItemSlot));
+	std::weak_ptr<InteractibleItemSlot> tempptr = std::dynamic_pointer_cast<InteractibleItemSlot>(m_ItemSlotMap.at(a_ItemSlot));
 	if (tempptr.expired())
 	{
 		throw CannotInteractWithSlot();
 	}
 	return true;
-}
-
-void Player::ResolveInteract(InteractResult& a_Result, const PlayerItemSlots a_ItemSlot)
-{
-	if (!a_Result.Success)
-	{
-		throw InteractionFailed(a_Result.Message);
-	}
-	else
-	{
-		if (a_Result.Unequip)
-		{
-			a_Result.Unequip = UnEquipItem(a_ItemSlot);
-		}
-		else if (a_Result.Consume)
-		{
-			std::weak_ptr<ConsumableItem> tempptr = std::dynamic_pointer_cast<ConsumableItem>(ItemSlotMap.at(a_ItemSlot));
-			if (tempptr.expired())
-			{
-				PlayerItemSlots otherArm;
-				switch (a_ItemSlot)
-				{
-				case LeftArmSlot:
-					otherArm = RightArmSlot;
-				case RightArmSlot:
-					otherArm = LeftArmSlot;
-				default:
-					break;
-				}
-				tempptr.lock()->ConsumeItem(ItemSlotMap.at(otherArm)->item);
-			}
-			else
-			{
-				throw ItemCannotBeConsumed(ItemSlotMap.at(a_ItemSlot)->GetItemName());
-			}
-		}
-	}
 }

@@ -8,8 +8,6 @@ public:
 	FlashLight();
 	~FlashLight();
 
-	void Interact(InteractResult& a_Result) override;
-
 	void PressButton(InteractResult &a_Result) override;
 
 private:

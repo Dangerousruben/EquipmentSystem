@@ -15,18 +15,12 @@ struct Ammo
 	}
 };
 
-class AmmoClip : public ConsumableItem
+class AmmoClip : public Item
 {
 	friend Gun;
 public:
 	AmmoClip();
 	virtual ~AmmoClip();
-
-	void Interact(InteractResult& a_Result) override;
-
-	bool CanBeConsumedBy(std::weak_ptr<Item> a_Item) override;
-
-	bool ConsumeItem(std::weak_ptr<Item> a_Item) override;
 
 private:
 	Ammo m_Ammo;
