@@ -15,15 +15,12 @@ ItemSlot::~ItemSlot()
 
 bool ItemSlot::EquipItem(const std::shared_ptr<Item> a_NewItem)
 {
-	auto foundItem = std::find_if(a_NewItem->CompatibleEquipTypes.begin(), a_NewItem->CompatibleEquipTypes.end(),
-		[=](ItemEquipType a_ItemType) { return a_ItemType == ItemEquipType::Any || a_ItemType == SlotType; });
-
-	if (foundItem == a_NewItem->CompatibleEquipTypes.end())
+	if (CanEquip(a_NewItem))
 	{
-		throw ImcompatibleItem();
+		item = a_NewItem;
+		return true;
 	}
-	item = a_NewItem;
-	return true;
+	return false;
 }
 
 bool ItemSlot::UnEquipItem()
@@ -33,6 +30,22 @@ bool ItemSlot::UnEquipItem()
 		throw ItemSlotEmpty();
 	}
 	item.reset();
+	return true;
+}
+
+bool ItemSlot::CanEquip(std::shared_ptr<Item> a_NewItem)
+{
+	if (!a_NewItem)
+	{
+		throw EquipItemEmpty();
+	}
+	auto foundItem = std::find_if(a_NewItem->CompatibleEquipTypes.begin(), a_NewItem->CompatibleEquipTypes.end(),
+		[=](ItemEquipType a_ItemType) { return a_ItemType == ItemEquipType::Any || a_ItemType == SlotType; });
+
+	if (foundItem == a_NewItem->CompatibleEquipTypes.end())
+	{
+		throw IncompatibleItem();
+	}
 	return true;
 }
 

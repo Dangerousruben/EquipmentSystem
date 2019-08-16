@@ -2,11 +2,11 @@
 #include <exception>
 #include <string>
 
-class ImcompatibleItem : public std::exception
+class IncompatibleItem : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Imcompatible Item type for slot\n";
+		return "Incompatible Item type for slot\n";
 	}
 };
 

@@ -1,7 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <map>
 
 
 class InteractibleItemSlot;
@@ -44,6 +41,8 @@ public:
 	void Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
 	void ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+
+	void SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots a_ItemSlot2);
 
 private:
 	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> ItemSlotMap;

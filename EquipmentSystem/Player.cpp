@@ -26,6 +26,10 @@ bool Player::EquipItem(const std::shared_ptr<Item> a_Item, const PlayerItemSlots
 	{
 		throw EquipItemEmpty();
 	}
+	if (ItemSlotMap.at(a_ItemSlot)->HasItemEquipped())
+	{
+		ItemSlotMap.at(a_ItemSlot)->UnEquipItem();
+	}
 
 	return ItemSlotMap.at(a_ItemSlot)->EquipItem(a_Item);
 }
@@ -180,6 +184,35 @@ void Player::ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_R
 			tempGunPtr.lock()->ToggleMode(a_Result);
 		}
 	}
+}
+
+void Player::SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots a_ItemSlot2)
+{
+	auto tempItem1 = ItemSlotMap.at(a_ItemSlot1)->item;
+	auto tempItem2 = ItemSlotMap.at(a_ItemSlot2)->item;
+	try
+	{
+		try
+		{
+			EquipItem(tempItem2, a_ItemSlot1);
+		}
+		catch (EquipItemEmpty) {}
+		catch(ItemSlotEmpty) {}
+		try
+		{
+			EquipItem(tempItem1, a_ItemSlot2);
+		}
+		catch (EquipItemEmpty) {}
+		catch (ItemSlotEmpty) {}
+	}
+	catch (IncompatibleItem)
+	{
+		if (tempItem1)
+		EquipItem(tempItem1, a_ItemSlot1);
+		if (tempItem2)
+		EquipItem(tempItem2, a_ItemSlot2);
+		throw IncompatibleItem();
+	}	
 }
 
 bool Player::CanInteract(const PlayerItemSlots a_ItemSlot)

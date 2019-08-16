@@ -13,6 +13,8 @@ public:
 
 	bool UnEquipItem();
 
+	bool CanEquip(std::shared_ptr<Item> a_NewItem);
+
 	bool HasItemEquipped();
 
 	std::string GetItemName();

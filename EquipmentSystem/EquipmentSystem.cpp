@@ -7,7 +7,6 @@
 #include "Hat.h"
 #include "FlashLight.h"
 
-
 void section_command(std::string Cmd, std::string &wd1, std::string &wd2, std::string &wd3)
 {
 	std::string sub_str;
@@ -212,6 +211,24 @@ bool parser(std::string wd1, std::string wd2, std::string wd3, std::shared_ptr<P
 			return true;
 		}
 			
+	}
+	else if (wd2 == "SWAP")
+	{
+		if (wd3 == "LEFTARM")
+		{
+			a_Player->SwapItems(selectedSlot, LeftArmSlot);
+			return true;
+		}
+		else if (wd3 == "RIGHTARM")
+		{
+			a_Player->SwapItems(selectedSlot, RightArmSlot);
+			return true;
+		}
+		else if (wd3 == "HEAD")
+		{
+			a_Player->SwapItems(selectedSlot, HeadSlot);
+			return true;
+		}
 	}
 	return false;
 }
