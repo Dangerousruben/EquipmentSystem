@@ -1,6 +1,8 @@
 #pragma once
 #include "Item.h"
 
+
+
 enum GunMode
 {
 	Single,
@@ -23,19 +25,15 @@ static std::string ToString(GunMode a_GunMode)
 	}
 }
 
-class IGunInterface
+class GunInterface
 {
 public:
-	IGunInterface() {};
-	virtual ~IGunInterface() {};
+	GunInterface() {};
+	virtual ~GunInterface() {};
 
 	virtual void Shoot(InteractResult &a_Result) = 0;
 
-	virtual void ToggleMode(InteractResult& a_Result) = 0;
-
-protected:
-	virtual void SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode) = 0;
-
 private:
+
 
 };

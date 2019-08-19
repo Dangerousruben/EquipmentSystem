@@ -10,24 +10,18 @@ enum ItemEquipType
 	Head,
 	Torso,
 	Arm,
-	Leg,
-	None
+	Leg
 };
 
 
 struct InteractResult 
 {
-	bool Success = false;
-	bool Unequip = false;
-	std::string Message = "";
-
-	bool Consume = false;
-
-	int ThrowSpeed = 0;
-
-	int NumOfShotsFired = 0;
+	bool success = false;
+	bool unequip = false;
+	std::string message = "";
+	bool consume = false;
+	int numof_shots_fired = 0;
 };
-
 
 class Item
 {
@@ -35,14 +29,21 @@ public:
 	Item();
 	virtual ~Item();
 
-	virtual std::string GetName() { return Name; };
+	std::string GetName() { return name; };
 
-	std::vector<ItemEquipType> CompatibleEquipTypes;
+protected:
+	std::string name = "Item";
+
+};
+
+class EquipableItem : public Item
+{
+public:
+	EquipableItem();
+	virtual ~EquipableItem();
+
+	std::vector<ItemEquipType> compatible_equip_types;
 
 	virtual void Throw(InteractResult& a_Result);
 
-protected:
-	std::string Name = "Item";
-
-	int ThrowSpeed = 10;
 };

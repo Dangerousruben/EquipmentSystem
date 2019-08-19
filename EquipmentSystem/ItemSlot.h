@@ -4,27 +4,26 @@
 class ItemSlot
 {
 public:
-	friend Player;
 
 	ItemSlot(ItemEquipType a_ItemSlotType);
 	virtual ~ItemSlot();
 
-	bool EquipItem(std::shared_ptr<Item> a_NewItem);
+	void EquipItem(std::shared_ptr<EquipableItem> a_NewItem, InteractResult& a_Result);
 
-	bool UnEquipItem();
+	void UnEquipItem(InteractResult& a_Result);
 
-	bool CanEquip(std::shared_ptr<Item> a_NewItem);
+	bool CanEquip(std::shared_ptr<EquipableItem> a_NewItem) const;
 
-	bool HasItemEquipped();
+	bool HasItemEquipped() const;
 
-	std::string GetItemName();
+	std::string GetItemName() const;
 
-protected:
-	std::shared_ptr<Item> m_Item;
+	std::shared_ptr<EquipableItem> GetItem() const { return item; };
 
 private:
+	std::shared_ptr<EquipableItem> item;
 
-	ItemEquipType SlotType;
+	const ItemEquipType slot_type;
 };
 
 class InteractibleItemSlot : public ItemSlot

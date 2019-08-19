@@ -1,45 +1,44 @@
 #pragma once
 #include "Item.h"
 #include "GunInterface.h"
+#include "ToggleInterface.h"
 
 
 
 class AmmoClip;
 
-class Gun : public Item, public IGunInterface
+class Gun : public EquipableItem, public GunInterface, public ToggleInterface
 {
 public:
 	Gun();
 	virtual ~Gun();
 
-	virtual std::string GetName() override { return "Gun"; };
-
-	void ToggleMode(InteractResult& a_Result) override;
+	void ToggleState(InteractResult& a_Result) override;
 	
-	virtual void Reload(std::shared_ptr<AmmoClip> a_AmmoClip);
+	void Reload(std::shared_ptr<AmmoClip> a_AmmoClip);
 
-	int GetAmmo();
+	int GetAmmo() const;
 
-	virtual void Shoot(InteractResult& a_Result) override;
+	void Shoot(InteractResult& a_Result) override;
 
-
-protected:
-	//TODO Make struct rather than class
-	std::shared_ptr<AmmoClip> m_AmmoClip;
-
-	GunMode m_GunMode = GunMode::Single;
-
-	int NumOfBurstShot = 3;
-
-	void SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode) override;
 
 private:
-	virtual void SingleShot(InteractResult& a_Result);
+	std::shared_ptr<AmmoClip> ammo_clip;
 
-	virtual void AutomaticShot(InteractResult& a_Result);
+	GunMode gun_mode = GunMode::Single;
 
-	virtual void BurstShot(InteractResult& a_Result);
+	const int numof_burst_shot = 3;
 
-	virtual void FireShot();
+	const int fire_rate = 100;
+
+	void SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode);
+
+	void SingleShot(InteractResult& a_Result);
+
+	void AutomaticShot(InteractResult& a_Result);
+
+	void BurstShot(InteractResult& a_Result);
+
+	void FireShot();
 };
 

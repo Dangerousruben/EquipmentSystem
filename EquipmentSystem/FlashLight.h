@@ -1,16 +1,16 @@
 #pragma once
 #include "Item.h"
-#include "IButtonInterface.h"
+#include "ToggleInterface.h"
 
-class FlashLight : public Item, public IButtonInterface
+class FlashLight : public EquipableItem, public ToggleInterface
 {
 public:
 	FlashLight();
 	~FlashLight();
 
-	void PressButton(InteractResult &a_Result) override;
+	void ToggleState(InteractResult &a_Result) override;
 
 private:
 
-	bool IsOn = false;
+	bool is_on = false;
 };

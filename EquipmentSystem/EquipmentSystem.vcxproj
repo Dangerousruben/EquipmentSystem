@@ -156,7 +156,7 @@
     <ClCompile Include="FlashLight.cpp" />
     <ClCompile Include="Gun.cpp" />
     <ClCompile Include="Hat.cpp" />
-    <ClCompile Include="IButtonInterface.cpp" />
+    <ClCompile Include="ToggleInterface.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="ItemSlot.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -170,7 +170,7 @@
     <ClInclude Include="FlashLight.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="Hat.h" />
-    <ClInclude Include="IButtonInterface.h" />
+    <ClInclude Include="ToggleInterface.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="ItemSlot.h" />
     <ClInclude Include="Player.h" />

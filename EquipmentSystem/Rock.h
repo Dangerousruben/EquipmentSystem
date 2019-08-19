@@ -1,7 +1,7 @@
 #pragma once
 #include "Item.h"
 
-class Rock : public Item
+class Rock : public EquipableItem
 {
 public:
 	Rock();

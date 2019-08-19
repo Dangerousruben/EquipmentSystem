@@ -4,70 +4,65 @@
 
 
 
-ItemSlot::ItemSlot(ItemEquipType a_ItemSlotType)
+ItemSlot::ItemSlot(ItemEquipType a_ItemSlotType) : slot_type(a_ItemSlotType)
 {
-	SlotType = a_ItemSlotType;
 }
 
 ItemSlot::~ItemSlot()
 {
 }
 
-bool ItemSlot::EquipItem(const std::shared_ptr<Item> a_NewItem)
+void ItemSlot::EquipItem(const std::shared_ptr<EquipableItem> a_NewItem, InteractResult& a_Result)
 {
 	if (CanEquip(a_NewItem))
 	{
-		m_Item = a_NewItem;
-		return true;
+		a_Result.message += a_NewItem->GetName() + " has been equipped\n";
+		a_Result.success = true;
+		item = a_NewItem;
 	}
-	return false;
 }
 
-bool ItemSlot::UnEquipItem()
+void ItemSlot::UnEquipItem(InteractResult& a_Result)
 {
-	if (!m_Item)
+	if (!item)
 	{
 		throw ItemSlotEmpty();
 	}
-	m_Item.reset();
-	return true;
+	a_Result.message += item->GetName() + " has been unequipped\n";
+	a_Result.success = true;
+	item.reset();
 }
 
-bool ItemSlot::CanEquip(std::shared_ptr<Item> a_NewItem)
+bool ItemSlot::CanEquip(std::shared_ptr<EquipableItem> a_NewItem) const
 {
 	if (!a_NewItem)
 	{
 		throw EquipItemEmpty();
 	}
-	auto foundItem = std::find_if(a_NewItem->CompatibleEquipTypes.begin(), a_NewItem->CompatibleEquipTypes.end(),
-		[=](ItemEquipType a_ItemType) { return a_ItemType == ItemEquipType::Any || a_ItemType == SlotType; });
 
-	if (foundItem == a_NewItem->CompatibleEquipTypes.end())
+	//Will find either ItemEquipType Any or slot_type in the items compatible_equip_types vector
+	auto foundItem = std::find_if(a_NewItem->compatible_equip_types.begin(), a_NewItem->compatible_equip_types.end(),
+		[=](ItemEquipType a_ItemType) { return a_ItemType == ItemEquipType::Any || a_ItemType == slot_type; });
+
+	if (foundItem == a_NewItem->compatible_equip_types.end())
 	{
 		throw IncompatibleItem();
 	}
 	return true;
 }
 
-bool ItemSlot::HasItemEquipped()
+bool ItemSlot::HasItemEquipped() const
 {
-	if (m_Item)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return item != nullptr;
 }
 
-std::string ItemSlot::GetItemName()
+std::string ItemSlot::GetItemName() const
 {
-	if (!m_Item)
+	if (!item)
 	{
 		throw ItemSlotEmpty();
 	}
-	return m_Item->GetName();
+	return item->GetName();
 }
 
 InteractibleItemSlot::InteractibleItemSlot(ItemEquipType a_ItemSlotType)

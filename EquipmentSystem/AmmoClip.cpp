@@ -3,12 +3,25 @@
 #include "Gun.h"
 
 AmmoClip::AmmoClip() : 
-	m_Ammo(10)
+	kAmmoCapacity(10)
 {
-	CompatibleEquipTypes = { ItemEquipType::Arm };
-	Name = "Ammo Clip";
+	current_ammo = kAmmoCapacity;
+	compatible_equip_types = { ItemEquipType::Arm };
+	name = "Ammo Clip";
 }
 
 AmmoClip::~AmmoClip()
 {
+}
+
+void AmmoClip::FireBullet()
+{
+	if (current_ammo > 0)
+	{
+		current_ammo--;
+	}
+	else
+	{
+		throw OutOfAmmo();
+	}
 }

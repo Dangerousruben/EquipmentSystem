@@ -11,15 +11,22 @@ namespace TextAdventure
 {
 	void PrintHelp()
 	{
-		std::cout << "Welcome to this demonstration of the equipment system\nThe Player has 3 available item slots (Leftarm, RightArm and Head)\n";
-		std::cout << "Items can be equipped to slots and Leftarm and RightArm can use the items\n";
-		std::cout << "The available items are: Gun, AmmoClip FlashLight, Rock, and Hat\n";
-		std::cout << "Available commands:\nQuit - Quits the game\nHelp - Displays this message\n[ItemSlot] Equip [Item] - equips the item\n";
-		std::cout << "[ItemSlot] Unequip - Unequips the item held\n[ItemSlot] Get Name - Gets name of held item\n[ItemSlot] Interact - Uses the held item\n";
-		std::cout << "[ItemSlot] Shoot - Shoots gun if you are holding one\n[ItemSlot] ToggleGunMode - If you are holding a gun toggle the firing mode\n";
-		std::cout << "[ItemSlot] Reload - If you are holding a gun in one arm and an ammoclip in the other, it will reload the weapon\n";
-		std::cout << "[ItemSlot] get ammo - If you are holding a gun displays the ammo left\n[ItemSlot] Throw - Throw held item\n";
-		std::cout << "[ItemSlot] TurnOnOff - Turns switch on item on/off\n[ItemSlot] swap [ItemSlot] - swaps held items\n";
+		std::cout << "The Player has 3 available item slots (Leftarm, RightArm and Head)\nItems can be equipped to slots and Leftarm and RightArm can use the items\n";
+		std::cout << "The available items are: Gun, AmmoClip FlashLight, Rock, and Hat\n\n";
+		std::cout << "Available commands:\n";
+		std::cout << "status - Displays the players itemslots\n";
+		std::cout << "quit - Quits the game\n";
+		std::cout << "help - Displays the insructions\n";
+		std::cout << "[ItemSlot] equip [Item] - equips the item\n";
+		std::cout << "[ItemSlot] unequip - Unequips the item held\n";
+		std::cout << "[ItemSlot] get name - Gets name of held item\n";
+		std::cout << "[ItemSlot] get ammo - If you are holding a gun displays the ammo left\n";
+		std::cout << "[ItemSlot] reload - If you are holding a gun in one arm and an ammoclip in the other, it will reload the weapon\n";
+		std::cout << "[ItemSlot] shoot - Shoots gun if you are holding one\n";
+		std::cout << "[ItemSlot] swap [ItemSlot] - swaps held items\n";
+		std::cout << "[ItemSlot] throw - Throw held item\n";
+		std::cout << "[ItemSlot] toggle - Toggle item mode, usable on flashlight and gun\n";
+		std::cout << "[ItemSlot] use - Uses the held items default action\n";
 	}
 
 	void SectionCommand(std::string a_Cmd, std::string& a_Word1, std::string& a_Word2, std::string& a_Word3)
@@ -93,6 +100,12 @@ namespace TextAdventure
 			return true;
 		}
 
+		if (a_Word1 == "STATUS")
+		{
+			std::cout << "\n" << a_Player->GetStatus();
+			return true;
+		}
+
 		PlayerItemSlots selectedSlot;
 		if (a_Word1 == "LEFTARM")
 		{
@@ -115,86 +128,74 @@ namespace TextAdventure
 		{
 			if (a_Word3 == "GUN")
 			{
-				if (a_Player->EquipItem(std::shared_ptr<Item>(std::make_shared<Gun>()), selectedSlot))
-				{
-					std::cout << "Player has equipped the Gun\n";
-					return true;
-				}
+				InteractResult result;
+				a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<Gun>()), selectedSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if ("ROCK" == a_Word3)
 			{
-				if (a_Player->EquipItem(std::shared_ptr<Item>(std::make_shared<Rock>()), selectedSlot))
-				{
-					std::cout << "Player has equipped the Rock\n";
-					return true;
-				}
+				InteractResult result;
+				a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<Rock>()), selectedSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if ("AMMOCLIP" == a_Word3)
 			{
-				if (a_Player->EquipItem(std::shared_ptr<Item>(std::make_shared<AmmoClip>()), selectedSlot))
-				{
-					std::cout << "Player has equipped the AmmoClip\n";
-					return true;
-				}
+				InteractResult result;
+				a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<AmmoClip>()), selectedSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if ("HAT" == a_Word3)
 			{
-				if (a_Player->EquipItem(std::shared_ptr<Item>(std::make_shared<Hat>()), selectedSlot))
-				{
-					std::cout << "Player has equipped the Hat\n";
-					return true;
-				}
+				InteractResult result;
+				a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<Hat>()), selectedSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if ("FLASHLIGHT" == a_Word3)
 			{
-				if (a_Player->EquipItem(std::shared_ptr<Item>(std::make_shared<FlashLight>()), selectedSlot))
-				{
-					std::cout << "Player has equipped the FlashLight\n";
-					return true;
-				}
+				InteractResult result;
+				a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<FlashLight>()), selectedSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 		}
 		else if (a_Word2 == "RELOAD")
 		{
 			InteractResult result;
 			a_Player->Reload(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
+			std::cout << result.message;
+			return result.success;
 		}
 		else if (a_Word2 == "SHOOT")
 		{
 			InteractResult result;
 			a_Player->Shoot(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
+			std::cout << result.message;
+			return result.success;
 		}
 		else if (a_Word2 == "THROW")
 		{
 			InteractResult result;
 			a_Player->Throw(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
+			std::cout << result.message;
+			return result.success;
 		}
-		else if (a_Word2 == "TURNONOFF")
+		else if (a_Word2 == "TOGGLE")
 		{
 			InteractResult result;
-			a_Player->TurnOnOff(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
-		}
-		else if (a_Word2 == "TOGGLEGUNMODE")
-		{
-			InteractResult result;
-			a_Player->ToggleGunMode(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
+			a_Player->Toggle(selectedSlot, result);
+			std::cout << result.message;
+			return result.success;
 		}
 		else if (a_Word2 == "USE")
 		{
 			InteractResult result;
 			a_Player->Use(selectedSlot, result);
-			std::cout << result.Message;
-			return result.Success;
+			std::cout << result.message;
+			return result.success;
 		}
 		else if (a_Word2 == "GET")
 		{
@@ -211,29 +212,39 @@ namespace TextAdventure
 		}
 		else if (a_Word2 == "UNEQUIP")
 		{
-			if (a_Player->UnEquipItem(selectedSlot))
-			{
-				std::cout << "The selected item slot has been unequipped its item\n";
-				return true;
-			}
+			InteractResult result;
+			a_Player->EquipItem(std::shared_ptr<EquipableItem>(std::make_shared<Gun>()), selectedSlot, result);
+			std::cout << result.message;
+			return result.success;
 
 		}
 		else if (a_Word2 == "SWAP")
 		{
-			if (a_Word3 == "LEFTARM")
+			if (a_Word3 == a_Word1)
 			{
-				a_Player->SwapItems(selectedSlot, LeftArmSlot);
-				return true;
+				"Cannot swap using the same itemslot\n";
+				return false;
+			}
+			else if (a_Word3 == "LEFTARM")
+			{
+				InteractResult result;
+				a_Player->SwapItems(selectedSlot, LeftArmSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if (a_Word3 == "RIGHTARM")
 			{
-				a_Player->SwapItems(selectedSlot, RightArmSlot);
-				return true;
+				InteractResult result;
+				a_Player->SwapItems(selectedSlot, RightArmSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 			else if (a_Word3 == "HEAD")
 			{
-				a_Player->SwapItems(selectedSlot, HeadSlot);
-				return true;
+				InteractResult result;
+				a_Player->SwapItems(selectedSlot, HeadSlot, result);
+				std::cout << result.message;
+				return result.success;
 			}
 		}
 		return false;
@@ -242,12 +253,12 @@ namespace TextAdventure
 
 int main()
 {
-	std::vector<std::string> AvailableItems = { "Gun", "Rock" };
 	std::shared_ptr<Player> player(new Player());
 	std::string command;
 	std::string word1;
 	std::string word2;
 	std::string word3;
+	std::cout << "Welcome to this demonstration of the equipment system\n";
 	TextAdventure::PrintHelp();
 	while (word1 != "QUIT")
 	{
@@ -257,6 +268,7 @@ int main()
 			word1.clear();
 			word2.clear();
 			word3.clear();
+			std::cout << ">>> ";
 			getline(std::cin, command);
 			if (command != "")
 			{

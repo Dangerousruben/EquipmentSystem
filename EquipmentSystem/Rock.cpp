@@ -4,8 +4,8 @@
 
 Rock::Rock()
 {
-	CompatibleEquipTypes = { ItemEquipType::Arm };
-	Name = "Rock";
+	compatible_equip_types = { ItemEquipType::Arm };
+	name = "Rock";
 }
 
 Rock::~Rock()

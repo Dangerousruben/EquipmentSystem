@@ -4,18 +4,17 @@
 
 FlashLight::FlashLight()
 {
-	CompatibleEquipTypes = { ItemEquipType::Arm };
-	Name = "FlashLight";
+	compatible_equip_types = { ItemEquipType::Arm };
+	name = "FlashLight";
 }
 
 FlashLight::~FlashLight()
 {
 }
 
-void FlashLight::PressButton(InteractResult& a_Result)
+void FlashLight::ToggleState(InteractResult& a_Result)
 {
-	IsOn = !IsOn;
-	a_Result.Success = true;
-	a_Result.Unequip = false;
-	a_Result.Message = "Flashlight is turned " + std::string(IsOn ? "On" : "Off") + "\n";
+	is_on = !is_on;
+	a_Result.success = true;
+	a_Result.message = name + " is turned " + std::string(is_on ? "on" : "off") + "\n";
 }

@@ -3,8 +3,8 @@
 
 Hat::Hat()
 {
-	CompatibleEquipTypes = { ItemEquipType::Arm, ItemEquipType::Head };
-	Name = "Hat";
+	compatible_equip_types = { ItemEquipType::Arm, ItemEquipType::Head };
+	name = "Hat";
 }
 
 Hat::~Hat()

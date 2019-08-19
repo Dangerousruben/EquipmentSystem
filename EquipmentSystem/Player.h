@@ -4,6 +4,7 @@
 class InteractibleItemSlot;
 class ItemSlot;
 class Item;
+class EquipableItem;
 
 struct InteractResult;
 
@@ -14,36 +15,51 @@ enum PlayerItemSlots
 	HeadSlot
 };
 
+static std::string ToString(const PlayerItemSlots a_ItemSlot)
+{
+	switch (a_ItemSlot)
+	{
+	case LeftArmSlot:
+		return "LeftArmSlot";
+	case RightArmSlot:
+		return "RightArmSlot";
+	case HeadSlot:
+		return "HeadSlot";
+	default:
+		return "";
+	}
+}
+
 class Player
 {
 public:
 	Player();
 	~Player();
 
-	bool EquipItem(const std::shared_ptr<Item> a_Item, const PlayerItemSlots a_ItemSlot);
+	void EquipItem(const std::shared_ptr<EquipableItem> a_Item, PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	bool UnEquipItem(const PlayerItemSlots a_ItemSlot);
+	void UnEquipItem(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	std::string GetItemNameOnSlot(const PlayerItemSlots a_ItemSlot);
+	std::string GetItemNameOnSlot(PlayerItemSlots a_ItemSlot) const;
 
-	void Reload(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void Reload(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	int GetAmmo(const PlayerItemSlots a_ItemSlot);
+	int GetAmmo(PlayerItemSlots a_ItemSlot);
 
-	void Shoot(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void Shoot(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	void Throw(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void Throw(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	void TurnOnOff(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void Toggle(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	void Use(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void Use(PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
 
-	void ToggleGunMode(const PlayerItemSlots a_ItemSlot, InteractResult& a_Result);
+	void SwapItems(PlayerItemSlots a_ItemSlot1, PlayerItemSlots a_ItemSlot2, InteractResult& a_Result);
 
-	void SwapItems(const PlayerItemSlots a_ItemSlot1, const PlayerItemSlots a_ItemSlot2);
+	std::string GetStatus() const;
 
 private:
-	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> m_ItemSlotMap;
+	std::map<PlayerItemSlots, std::shared_ptr<ItemSlot>> item_slot_map;
 
-	bool CanInteract(const PlayerItemSlots a_ItemSlot);
+	bool CanInteract(PlayerItemSlots a_ItemSlot);
 };

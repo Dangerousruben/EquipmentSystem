@@ -13,10 +13,17 @@ Item::~Item()
 
 }
 
-void Item::Throw(InteractResult& a_Result)
+EquipableItem::EquipableItem()
 {
-	a_Result.Success = true;
-	a_Result.Unequip = true;
-	a_Result.Message = GetName() + " has been thrown with speed " + std::to_string(ThrowSpeed) + "\n";
-	a_Result.ThrowSpeed = ThrowSpeed;
+}
+
+EquipableItem::~EquipableItem()
+{
+}
+
+void EquipableItem::Throw(InteractResult& a_Result)
+{
+	a_Result.success = true;
+	a_Result.unequip = true;
+	a_Result.message = GetName() + " has been thrown far far away\n";
 }

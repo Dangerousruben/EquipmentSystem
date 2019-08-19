@@ -1,27 +1,20 @@
 #pragma once
 #include "Item.h"
 
-class Gun;
 
-struct Ammo
+//Ammoclip class which is put inside the Gun Class
+class AmmoClip : public EquipableItem
 {
-	const int AmmoCapacity;
-	int CurrentAmmo;
-
-	Ammo(int a_AmmoCapacity)
-		: AmmoCapacity(a_AmmoCapacity), CurrentAmmo(AmmoCapacity)
-	{
-
-	}
-};
-
-class AmmoClip : public Item
-{
-	friend Gun;
 public:
 	AmmoClip();
 	virtual ~AmmoClip();
 
+	int GetCurrentAmmo() const { return current_ammo; }
+
+	//Fires bullet and 
+	void FireBullet();
+
 private:
-	Ammo m_Ammo;
+	const int kAmmoCapacity;
+	int current_ammo;
 };

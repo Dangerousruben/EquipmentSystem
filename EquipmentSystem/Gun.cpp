@@ -4,9 +4,9 @@
 
 Gun::Gun()
 {
-	CompatibleEquipTypes = { ItemEquipType::Arm };
-	Name = "Gun";
-	m_AmmoClip = std::make_shared<AmmoClip>();
+	compatible_equip_types = { ItemEquipType::Arm };
+	name = "Gun";
+	ammo_clip = std::make_shared<AmmoClip>();
 }
 
 Gun::~Gun() 
@@ -15,14 +15,14 @@ Gun::~Gun()
 
 void Gun::SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode)
 {
-	m_GunMode = a_NewGunMode;
-	a_Result.Success = true;
-	a_Result.Message = "Switched mode to " + ToString(a_NewGunMode) + "\n";
+	gun_mode = a_NewGunMode;
+	a_Result.success = true;
+	a_Result.message = "Switched mode to " + ToString(a_NewGunMode) + "\n";
 }
 
-void Gun::ToggleMode(InteractResult& a_Result)
+void Gun::ToggleState(InteractResult& a_Result)
 {
-	switch (m_GunMode)
+	switch (gun_mode)
 	{
 	case Single:
 		SwitchMode(a_Result, Automatic);
@@ -38,22 +38,27 @@ void Gun::ToggleMode(InteractResult& a_Result)
 	}
 }
 
+
 void Gun::Reload(std::shared_ptr<AmmoClip> a_AmmoClip)
 {
 	if (a_AmmoClip)
 	{
-		m_AmmoClip.swap(a_AmmoClip);
+		ammo_clip.swap(a_AmmoClip);
+	}
+	else
+	{
+		throw NoAmmoClipEquipped();
 	}
 }
 
-int Gun::GetAmmo()
+int Gun::GetAmmo() const
 {
-	return m_AmmoClip->m_Ammo.CurrentAmmo;
+	return ammo_clip->GetCurrentAmmo();
 }
 
 void Gun::Shoot(InteractResult& a_Result)
 {
-	switch (m_GunMode)
+	switch (gun_mode)
 	{
 	case Single:
 		SingleShot(a_Result);
@@ -67,34 +72,33 @@ void Gun::Shoot(InteractResult& a_Result)
 	default:
 		break;
 	}
-	if (a_Result.NumOfShotsFired == 1)
+	if (a_Result.numof_shots_fired == 1)
 	{
-		a_Result.Message += std::to_string(a_Result.NumOfShotsFired) + " shot was successfully fired\n";
+		a_Result.message += std::to_string(a_Result.numof_shots_fired) + " shot was successfully fired\n";
 	}
 	else
 	{
-		a_Result.Message += std::to_string(a_Result.NumOfShotsFired) + " shots were successfully fired\n";
+		a_Result.message += std::to_string(a_Result.numof_shots_fired) + " shots were successfully fired\n";
 	}
-	a_Result.Success = true;
+	a_Result.success = true;
 }
 
 void Gun::SingleShot(InteractResult& a_Result)
 {
-	a_Result.Message += "Fire shot in single mode\n";
+	a_Result.message += "Fire shot in single mode\n";
 	try
 	{
 		FireShot();
 	}
 	catch (OutOfAmmo)
 	{
-		a_Result.Message += "Out of ammo\n";
+		a_Result.message += "Out of ammo\n";
 	}
-	a_Result.NumOfShotsFired++;
-	a_Result.Message += "Shot fired\n";
+	a_Result.numof_shots_fired++;
+	a_Result.message += "Shot fired\n";
 }
 
 
-//TODO make better or remove
 void Gun::AutomaticShot(InteractResult& a_Result)
 {
 	std::cout << "Fire shots in automatic mode\n";
@@ -103,44 +107,39 @@ void Gun::AutomaticShot(InteractResult& a_Result)
 		while (true)
 		{
 			FireShot();
-			a_Result.NumOfShotsFired++;
+			a_Result.numof_shots_fired++;
+			// Temporary: just print to stdout to animate the output in a fun way. Should be improved in realistic implementation.
 			std::cout << "Shot fired\n";
-			Sleep(100);
+			std::this_thread::sleep_for(std::chrono::milliseconds(fire_rate));
 		}
 	}
 	catch (OutOfAmmo)
 	{
-		a_Result.Message += "Out of ammo\n";
+		a_Result.message += "Out of ammo\n";
 	}
 }
 
 void Gun::BurstShot(InteractResult& a_Result)
 {
-	a_Result.Message += "Fire " + std::to_string(NumOfBurstShot) + " shots in burst mode\n";
-	for (int i = 0; i < NumOfBurstShot; i++)
+	a_Result.message += "Fire " + std::to_string(numof_burst_shot) + " shots in burst mode\n";
+	try
 	{
-		try
+		for (int i = 0; i < numof_burst_shot; i++)
 		{
 			FireShot();
+			a_Result.numof_shots_fired++;
+			std::this_thread::sleep_for(std::chrono::milliseconds(fire_rate));
+			std::cout << "Shot fired\n";
+
 		}
-		catch (OutOfAmmo)
-		{
-			a_Result.Message += "Out of ammo\n";
-			continue;
-		}
-		a_Result.NumOfShotsFired++;
-		a_Result.Message += "Shot fired\n";
+	}
+	catch (OutOfAmmo)
+	{
+		a_Result.message += "Out of ammo\n";
 	}
 }
 
 void Gun::FireShot()
 {
-	if (m_AmmoClip->m_Ammo.CurrentAmmo > 0)
-	{
-		m_AmmoClip->m_Ammo.CurrentAmmo--;
-	}
-	else
-	{
-		throw OutOfAmmo();
-	}
+	ammo_clip->FireBullet();
 }
