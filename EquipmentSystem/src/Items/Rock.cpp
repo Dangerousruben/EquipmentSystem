@@ -1,14 +1,16 @@
 #include "stdafx.h"
 #include "Items/Rock.h"
 
-
-Rock::Rock()
+namespace EquipmentSystem
 {
-	compatible_equip_types = { ItemEquipType::Arm };
-	name = "Rock";
-}
+	Rock::Rock()
+	{
+		compatible_equip_types = { ItemEquipType::Arm };
+		name = "Rock";
+	}
 
-Rock::~Rock()
-{
-	
+	Rock::~Rock()
+	{
+
+	}
 }
