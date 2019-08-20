@@ -1,6 +1,6 @@
 #pragma once
-#include "Items/Item.h"
-#include "Items/ToggleInterface.h"
+#include "items/item.h"
+#include "items/toggle.h"
 
 namespace EquipmentSystem
 {
