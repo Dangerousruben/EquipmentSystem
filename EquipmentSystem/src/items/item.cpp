@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Items/Item.h"
-#include "Items/ItemSlot.h"
+#include "items/item.h"
+#include "items/itemSlot.h"
 
 namespace EquipmentSystem
 {
