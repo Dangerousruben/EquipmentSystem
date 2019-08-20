@@ -1,11 +1,11 @@
 #include "stdafx.h"
-#include "Player.h"
-#include "Items/Item.h"
-#include "Items/ItemSlot.h"
-#include "Items/Gun.h"
-#include "Items/AmmoClip.h"
-#include "Items/Rock.h"
-#include "Items/FlashLight.h"
+#include "player.h"
+#include "items/item.h"
+#include "items/itemSlot.h"
+#include "items/gun.h"
+#include "items/ammoClip.h"
+#include "items/rock.h"
+#include "items/flashLight.h"
 
 namespace EquipmentSystem
 {
