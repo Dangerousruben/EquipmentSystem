@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Items/Hat.h"
+#include "items/hat.h"
 
 namespace EquipmentSystem
 {
