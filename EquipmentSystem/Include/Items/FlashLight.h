@@ -2,15 +2,18 @@
 #include "Items/Item.h"
 #include "Items/ToggleInterface.h"
 
-class FlashLight : public EquipableItem, public ToggleInterface
+namespace EquipmentSystem
 {
-public:
-	FlashLight();
-	~FlashLight();
+	class FlashLight : public EquipableItem, public ToggleInterface
+	{
+	public:
+		FlashLight();
+		~FlashLight();
 
-	void ToggleState(InteractResult &a_Result) override;
+		void ToggleState(InteractResult& a_Result) override;
 
-private:
+	private:
 
-	bool is_on = false;
-};
+		bool is_on = false;
+	};
+}

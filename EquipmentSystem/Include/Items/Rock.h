@@ -1,12 +1,15 @@
 #pragma once
 #include "Items/Item.h"
 
-class Rock : public EquipableItem
+namespace EquipmentSystem
 {
-public:
-	Rock();
-	virtual ~Rock();
+	class Rock : public EquipableItem
+	{
+	public:
+		Rock();
+		virtual ~Rock();
 
-private:
+	private:
 
-};
+	};
+}

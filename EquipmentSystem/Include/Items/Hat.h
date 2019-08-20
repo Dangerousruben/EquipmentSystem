@@ -1,10 +1,12 @@
 #pragma once
 #include "Items/Item.h"
 
-class Hat : public EquipableItem
+namespace EquipmentSystem
 {
-public:
-	Hat();
-	virtual ~Hat();
-};
-
+	class Hat : public EquipableItem
+	{
+	public:
+		Hat();
+		virtual ~Hat();
+	};
+}

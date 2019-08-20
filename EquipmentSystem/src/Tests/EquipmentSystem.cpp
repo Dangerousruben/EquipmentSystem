@@ -7,7 +7,7 @@
 #include "Items/Hat.h"
 #include "Items/FlashLight.h"
 
-namespace TextAdventure
+namespace EquipmentSystem
 {
 	void PrintHelp()
 	{
@@ -254,13 +254,13 @@ namespace TextAdventure
 
 int main()
 {
-	std::shared_ptr<Player> player(new Player());
+	std::shared_ptr<EquipmentSystem::Player> player(new EquipmentSystem::Player());
 	std::string command;
 	std::string word1;
 	std::string word2;
 	std::string word3;
 	std::cout << "Welcome to this demonstration of the equipment system\n";
-	TextAdventure::PrintHelp();
+	EquipmentSystem::PrintHelp();
 	while (true)
 	{
 		try
@@ -275,16 +275,16 @@ int main()
 			{
 				continue;
 			}
-				TextAdventure::SectionCommand(command, word1, word2, word3);
+				EquipmentSystem::SectionCommand(command, word1, word2, word3);
 
 			if (word1 == "QUIT")
 			{
 				break;
 			}
-				if (!TextAdventure::Parser(word1, word2, word3, player))
-				{
-					std::cout << "No valid command entered.\n";
-				}
+			if (!EquipmentSystem::Parser(word1, word2, word3, player))
+			{
+				std::cout << "No valid command entered.\n";
+			}
 		}
 		catch (const std::exception& e) {
 			std::cout << e.what();
