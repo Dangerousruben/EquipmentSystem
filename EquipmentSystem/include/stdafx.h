@@ -1,6 +1,6 @@
 #pragma once
 #include "vld.h"
-#include "EquipmentExceptions.h"
+#include "equipmentexceptions.h"
 
 #include <iostream>
 #include <exception>
