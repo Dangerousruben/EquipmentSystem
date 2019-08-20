@@ -1,5 +1,5 @@
 #pragma once
-#include "Items/Item.h"
+#include "items/item.h"
 
 
 namespace EquipmentSystem
