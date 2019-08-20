@@ -1,7 +1,7 @@
 #pragma once
-#include "Items/Item.h"
-#include "Items/GunInterface.h"
-#include "Items/ToggleInterface.h"
+#include "items/item.h"
+#include "items/shootable.h"
+#include "items/toggle.h"
 
 
 namespace EquipmentSystem
