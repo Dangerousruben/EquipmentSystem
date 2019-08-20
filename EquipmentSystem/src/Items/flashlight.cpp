@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Items/FlashLight.h"
+#include "items/flashlight.h"
 
 namespace EquipmentSystem
 {
