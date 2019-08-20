@@ -5,6 +5,10 @@
 
 x64/
 
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+
 # Compiled Object files
 *.slo
 *.lo

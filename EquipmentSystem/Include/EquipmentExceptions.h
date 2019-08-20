@@ -2,11 +2,11 @@
 #include <exception>
 #include <string>
 
-class ImcompatibleItem : public std::exception
+class IncompatibleItem : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Imcompatible Item type for slot\n";
+		return "Incompatible Item type for slot\n";
 	}
 };
 
@@ -38,7 +38,7 @@ class CannotInteractWithSlot : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Cannot interact with item using the given itemslot\n";
+		return "Cannot interact with item in the itemslot\n";
 	}
 };
 
@@ -61,16 +61,16 @@ class ItemCannotBeConsumed : public std::exception
 {
 public:
 	ItemCannotBeConsumed(std::string a_ItemName)
-		: ItemName(a_ItemName) {};
+		: item_name(a_ItemName) {};
 
 private:
 	const char* what() const throw()
 	{
-		std::string message = "Item " + ItemName + " cannot be consumed";
+		std::string message = "Item " + item_name + " cannot be consumed";
 		return message.c_str();
 	}
 
-	std::string ItemName;
+	std::string item_name;
 };
 
 class OutOfAmmo : public std::exception
@@ -85,7 +85,7 @@ class NoGunEquipped : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Itemslot does not have gun equipped\n";
+		return "The player has no gun equipped\n";
 	}
 };
 
@@ -93,6 +93,18 @@ class NoAmmoClipEquipped : public std::exception
 {
 	const char* what() const throw()
 	{
-		return "Itemslot does not have AmmoClip equipped\n";
+		return "The player has no ammoclip equipped\n";
 	}
+};
+
+class NoValidItem : public std::exception
+{
+	NoValidItem(std::string a_ItemName)
+		: item_name(a_ItemName) {};
+	const char* what() const throw()
+	{
+		std::string message = "Item " + item_name + " is not valid\n";
+		return message.c_str();
+	}
+	std::string item_name;
 };
