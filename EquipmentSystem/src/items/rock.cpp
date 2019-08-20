@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Items/Rock.h"
+#include "items/rock.h"
 
 namespace EquipmentSystem
 {
