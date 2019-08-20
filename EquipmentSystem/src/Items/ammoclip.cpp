@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Items/AmmoClip.h"
-#include "Items/Gun.h"
+#include "items/ammoClip.h"
+#include "items/gun.h"
 
 namespace EquipmentSystem
 {
