@@ -13,20 +13,20 @@ namespace EquipmentSystem
 	};
 
 
+	//Whenever an interaction is made an instance of the struct is send as a reference in the function
 	struct InteractResult
 	{
 		bool success = false;
-		bool unequip = false;
 		std::string message = "";
-		bool consume = false;
 		int numof_shots_fired = 0;
 	};
 
+	//Standard item class
 	class Item
 	{
 	public:
-		Item();
-		virtual ~Item();
+		Item() {};
+		virtual ~Item() {};
 
 		std::string GetName() { return name; };
 
@@ -35,14 +35,17 @@ namespace EquipmentSystem
 
 	};
 
+	//Items that can be equipped
 	class EquipableItem : public Item
 	{
 	public:
-		EquipableItem();
-		virtual ~EquipableItem();
+		EquipableItem() {};
+		virtual ~EquipableItem() {};
 
+		//A list of compatible equip types
 		std::vector<ItemEquipType> compatible_equip_types;
 
+		//Throws the item away
 		virtual void Throw(InteractResult& a_Result);
 
 	};

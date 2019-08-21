@@ -3,12 +3,12 @@
 
 namespace EquipmentSystem
 {
-	//Toggle Interface
-	class ToggleInterface
+	//Interface that toggles a state
+	class Toggle
 	{
 	public:
-		ToggleInterface() {};
-		virtual ~ToggleInterface() {};
+		Toggle() {};
+		virtual ~Toggle() {};
 
 		virtual void ToggleState(InteractResult& a_Result) = 0;
 	};

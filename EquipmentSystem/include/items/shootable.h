@@ -26,11 +26,12 @@ namespace EquipmentSystem
 		}
 	}
 
-	class GunInterface
+	//Interface for shooting
+	class Shootable
 	{
 	public:
-		GunInterface() {};
-		virtual ~GunInterface() {};
+		Shootable() {};
+		virtual ~Shootable() {};
 
 		virtual void Shoot(InteractResult& a_Result) = 0;
 

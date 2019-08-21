@@ -9,7 +9,7 @@ namespace EquipmentSystem
 	{
 	public:
 		AmmoClip();
-		virtual ~AmmoClip();
+		virtual ~AmmoClip() {};
 
 		int GetCurrentAmmo() const { return current_ammo; }
 
