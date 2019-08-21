@@ -1,18 +1,10 @@
 #include "stdafx.h"
-#include "items/itemslot.h"
-#include "player.h"
+#include "Items/ItemSlot.h"
+#include "Player.h"
 
 
 namespace EquipmentSystem
 {
-	ItemSlot::ItemSlot(ItemEquipType a_ItemSlotType) : slot_type(a_ItemSlotType)
-	{
-	}
-
-	ItemSlot::~ItemSlot()
-	{
-	}
-
 	void ItemSlot::EquipItem(const std::shared_ptr<EquipableItem> a_NewItem, InteractResult& a_Result)
 	{
 		if (CanEquip(a_NewItem))
@@ -64,14 +56,5 @@ namespace EquipmentSystem
 			throw ItemSlotEmpty();
 		}
 		return item->GetName();
-	}
-
-	InteractibleItemSlot::InteractibleItemSlot(ItemEquipType a_ItemSlotType)
-		: ItemSlot(a_ItemSlotType)
-	{
-	}
-
-	InteractibleItemSlot::~InteractibleItemSlot()
-	{
 	}
 }

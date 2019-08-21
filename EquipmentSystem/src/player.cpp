@@ -41,7 +41,7 @@ namespace EquipmentSystem
 
 	void Player::Reload(PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 	{
-		if (!CanInteract(a_ItemSlot))
+		if (CanInteract(a_ItemSlot))
 		{
 			PlayerItemSlots otherArm = (a_ItemSlot == RightArmSlot) ? LeftArmSlot : RightArmSlot;
 			auto tempGunptr = std::dynamic_pointer_cast<Gun>((item_slot_map.at(a_ItemSlot)->GetItem()));
@@ -86,7 +86,7 @@ namespace EquipmentSystem
 	{
 		if (CanInteract(a_ItemSlot))
 		{
-			auto tempShootPtr = std::dynamic_pointer_cast<GunInterface>(item_slot_map.at(a_ItemSlot).get()->GetItem());
+			auto tempShootPtr = std::dynamic_pointer_cast<Shootable>(item_slot_map.at(a_ItemSlot).get()->GetItem());
 			if (tempShootPtr)
 			{
 				tempShootPtr->Shoot(a_Result);
@@ -105,17 +105,16 @@ namespace EquipmentSystem
 				if (a_Result.success)
 				{
 					UnEquipItem(a_ItemSlot, a_Result);
-					a_Result.unequip = true;
 				}
 			}
 		}
 	}
 
-	void Player::Toggle(PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
+	void Player::ToggleState(PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 	{
 		if (CanInteract(a_ItemSlot))
 		{
-			auto tempButtonPtr = std::dynamic_pointer_cast<ToggleInterface>(item_slot_map.at(a_ItemSlot).get()->GetItem());
+			auto tempButtonPtr = std::dynamic_pointer_cast<Toggle>(item_slot_map.at(a_ItemSlot).get()->GetItem());
 			if (tempButtonPtr)
 			{
 				tempButtonPtr->ToggleState(a_Result);
@@ -126,7 +125,7 @@ namespace EquipmentSystem
 	void Player::Use(PlayerItemSlots a_ItemSlot, InteractResult& a_Result)
 	{
 		auto item = item_slot_map.at(a_ItemSlot).get()->GetItem();
-		auto tempShootPtr = std::dynamic_pointer_cast<GunInterface>(item);
+		auto tempShootPtr = std::dynamic_pointer_cast<Shootable>(item);
 
 		if (tempShootPtr)
 		{
@@ -148,7 +147,7 @@ namespace EquipmentSystem
 		auto tempFlashLightPtr = std::dynamic_pointer_cast<FlashLight>(item);
 		if (tempFlashLightPtr)
 		{
-			Toggle(a_ItemSlot, a_Result);
+			ToggleState(a_ItemSlot, a_Result);
 			return;
 		}
 	}

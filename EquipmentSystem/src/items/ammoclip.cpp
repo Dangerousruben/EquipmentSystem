@@ -12,10 +12,6 @@ namespace EquipmentSystem
 		name = "Ammo Clip";
 	}
 
-	AmmoClip::~AmmoClip()
-	{
-	}
-
 	void AmmoClip::DispenseBullet()
 	{
 		if (current_ammo > 0)

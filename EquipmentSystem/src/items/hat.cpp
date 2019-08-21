@@ -8,8 +8,4 @@ namespace EquipmentSystem
 		compatible_equip_types = { ItemEquipType::Arm, ItemEquipType::Head };
 		name = "Hat";
 	}
-
-	Hat::~Hat()
-	{
-	}
 }

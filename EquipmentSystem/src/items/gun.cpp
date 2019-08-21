@@ -11,10 +11,6 @@ namespace EquipmentSystem
 		ammo_clip = std::make_shared<AmmoClip>();
 	}
 
-	Gun::~Gun()
-	{
-	}
-
 	void Gun::SwitchMode(InteractResult& a_Result, GunMode a_NewGunMode)
 	{
 		gun_mode = a_NewGunMode;
@@ -41,14 +37,11 @@ namespace EquipmentSystem
 
 	void Gun::Reload(std::shared_ptr<AmmoClip> a_AmmoClip)
 	{
-		if (a_AmmoClip)
-		{
-			ammo_clip.swap(a_AmmoClip);
-		}
-		else
+		if (!a_AmmoClip)
 		{
 			throw NoAmmoClipEquipped();
 		}
+		ammo_clip.swap(a_AmmoClip);
 	}
 
 	int Gun::GetAmmo() const
@@ -103,7 +96,7 @@ namespace EquipmentSystem
 				a_Result.numof_shots_fired++;
 				// Temporary: just print to stdout to animate the output in a fun way. Should be improved in realistic implementation.
 				std::cout << "Shot fired\n";
-				std::this_thread::sleep_for(std::chrono::milliseconds(fire_rate));
+				std::this_thread::sleep_for(std::chrono::milliseconds(kfire_rate));
 			}
 		}
 		catch (OutOfAmmo)
@@ -114,15 +107,15 @@ namespace EquipmentSystem
 
 	void Gun::BurstShot(InteractResult& a_Result)
 	{
-		a_Result.message += "Fire " + std::to_string(numof_burst_shot) + " shots in burst mode\n";
+		a_Result.message += "Fire " + std::to_string(knumof_burst_shot) + " shots in burst mode\n";
 		try
 		{
-			for (int i = 0; i < numof_burst_shot; i++)
+			for (int i = 0; i < knumof_burst_shot; i++)
 			{
 				FireShot();
 				a_Result.numof_shots_fired++;
 				// Temporary: just print to stdout to animate the output in a fun way. Should be improved in realistic implementation.
-				std::this_thread::sleep_for(std::chrono::milliseconds(fire_rate));
+				std::this_thread::sleep_for(std::chrono::milliseconds(kfire_rate));
 				std::cout << "Shot fired\n";
 
 			}
